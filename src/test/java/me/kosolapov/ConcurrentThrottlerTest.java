@@ -3,6 +3,7 @@ package me.kosolapov;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +15,7 @@ import org.junit.Test;
 public class ConcurrentThrottlerTest {
 
     private static final Runnable EMPTY_RUNNABLE = () -> {};
-    private static final TimeCounter TEST_COUNTER = SimpleThrottler.TIME_COUNTER;
+    private static final TimeCounter TEST_COUNTER = ConcurrentThrottler.TIME_COUNTER;
 
     @Test
     public void testRps() throws Exception {
@@ -36,6 +37,7 @@ public class ConcurrentThrottlerTest {
         for (final CompletableFuture<List<ThrottlingResult>> client : clients) {
             results.addAll(client.get());
         }
+        results.sort(Comparator.comparing(ThrottlingResult::getTime));
         checkRps(results, rps);
     }
 
