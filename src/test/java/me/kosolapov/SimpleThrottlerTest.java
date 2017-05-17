@@ -8,26 +8,24 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.kosolapov.Throttler.ThrottlingResult;
-
-public class ThrottlerTest {
+public class SimpleThrottlerTest {
 
     private static final Runnable EMPTY_RUNNABLE = () -> {};
-    private static final Throttler.TimeCounter TEST_COUNTER = Throttler.TIME_COUNTER;
+    private static final TimeCounter TEST_COUNTER = SimpleThrottler.TIME_COUNTER;
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionOnZeroRps() throws Exception {
-        new Throttler(0);
+        new SimpleThrottler(0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionOnNegativeRps() throws Exception {
-        new Throttler(-1);
+        new SimpleThrottler(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionOnMoreThan100000Rps() throws Exception {
-        new Throttler(100001);
+        new SimpleThrottler(100001);
     }
 
     @Test
@@ -72,7 +70,7 @@ public class ThrottlerTest {
     @Test
     public void shouldRps1000ButNot1001Simple() throws Exception {
         final int rps = 1000;
-        final Throttler throttler = new Throttler(rps);
+        final SimpleThrottler throttler = new SimpleThrottler(rps);
         for (int i = 0; i < 1000; i++) {
             assertTrue(throttler.tryThrottle(EMPTY_RUNNABLE));
         }
@@ -82,7 +80,7 @@ public class ThrottlerTest {
     @Test
     public void testRps1000OnBorder() throws Exception {
         final int rps = 1000;
-        final Throttler throttler = new Throttler(rps);
+        final SimpleThrottler throttler = new SimpleThrottler(rps);
         final List<ThrottlingResult> results = new ArrayList<>(rps*2);
         final ThrottlingResult result = throttler.tryThrottleWithResult(EMPTY_RUNNABLE);
         results.add(result);
@@ -131,9 +129,9 @@ public class ThrottlerTest {
     }
 
     private void shouldRpsNButNotNPlusOne(int rps, int clientRps, int requestCount) {
-        final Throttler throttler = new Throttler(rps);
+        final SimpleThrottler throttler = new SimpleThrottler(rps);
         final List<ThrottlingResult> results = new ArrayList<>(requestCount);
-        final long waitNano = Throttler.NanoCounter.NANO_IN_SECOND / clientRps;
+        final long waitNano = TEST_COUNTER.getSecondAsTime() / clientRps;
         for (int i = 0; i < requestCount; i++) {
             final ThrottlingResult throttlingResult = throttler.tryThrottleWithResult(EMPTY_RUNNABLE);
             results.add(throttlingResult);
