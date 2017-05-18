@@ -9,9 +9,6 @@ import java.util.concurrent.CompletableFuture;
 
 import org.junit.Test;
 
-/**
- * @author Kirill Kosolapov (k.kosolapov@samsung.com)
- */
 public class ConcurrentThrottlerTest {
 
     private static final Runnable EMPTY_RUNNABLE = () -> {};
