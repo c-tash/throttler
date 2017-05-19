@@ -56,4 +56,9 @@ public class SimpleThrottler implements Throttler {
         return new ThrottlingResult(true, time);
     }
 
+    @Override
+    public ThrottlingResult tryThrottleWithResult() {
+        throw new RuntimeException("not implemented");
+    }
+
 }

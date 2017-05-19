@@ -22,4 +22,6 @@ public interface Throttler {
      * if action successfully goes through the rps limit, false if limit is exceeded.
      */
     ThrottlingResult tryThrottleWithResult(Runnable runnable);
+
+    ThrottlingResult tryThrottleWithResult();
 }

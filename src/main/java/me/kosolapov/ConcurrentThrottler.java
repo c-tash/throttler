@@ -59,4 +59,9 @@ public class ConcurrentThrottler implements Throttler {
         runnable.run();
         return new ThrottlingResult(true, time);
     }
+
+    @Override
+    public ThrottlingResult tryThrottleWithResult() {
+        return null;
+    }
 }
